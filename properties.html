@@ -1,0 +1,172 @@
+<div class="container py-5">
+  <div class="row">
+    <!-- Search Filters Sidebar -->
+    <div class="col-lg-3 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Search Filters</h5>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="searchProperties()" #searchForm="ngForm">
+            <div class="mb-3">
+              <label for="location" class="form-label">Location</label>
+              <input type="text" 
+                     class="form-control" 
+                     id="location" 
+                     name="location"
+                     [(ngModel)]="searchParams.location" 
+                     placeholder="Where do you want to go?">
+            </div>
+
+            <div class="mb-3">
+              <label for="checkIn" class="form-label">Check-in Date</label>
+              <input type="date" 
+                     class="form-control" 
+                     id="checkIn" 
+                     name="checkIn"
+                     [(ngModel)]="searchParams.checkInDate">
+            </div>
+
+            <div class="mb-3">
+              <label for="checkOut" class="form-label">Check-out Date</label>
+              <input type="date" 
+                     class="form-control" 
+                     id="checkOut" 
+                     name="checkOut"
+                     [(ngModel)]="searchParams.checkOutDate">
+            </div>
+
+            <div class="mb-3">
+              <label for="guests" class="form-label">Number of Guests</label>
+              <select class="form-select" 
+                      id="guests" 
+                      name="guests" 
+                      [(ngModel)]="searchParams.maxGuests">
+                <option value="">Any number</option>
+                <option value="1">1 Guest</option>
+                <option value="2">2 Guests</option>
+                <option value="3">3 Guests</option>
+                <option value="4">4 Guests</option>
+                <option value="5">5+ Guests</option>
+              </select>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" 
+                      class="btn btn-primary" 
+                      [disabled]="isLoading">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                Search Properties
+              </button>
+              <button type="button" 
+                      class="btn btn-outline-secondary" 
+                      (click)="clearFilters()">
+                Clear Filters
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Properties List -->
+    <div class="col-lg-9">
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2>Properties</h2>
+          <p class="text-muted mb-0" *ngIf="!isLoading">
+            {{ totalCount }} properties found
+          </p>
+        </div>
+      </div>
+
+      <!-- Loading Spinner -->
+      <div class="text-center py-5" *ngIf="isLoading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-3 text-muted">Loading properties...</p>
+      </div>
+
+      <!-- Properties Grid -->
+      <div class="row g-4" *ngIf="!isLoading && properties.length > 0">
+        <div class="col-lg-4 col-md-6" *ngFor="let property of properties">
+          <div class="card h-100 border-0 shadow-sm property-card">
+            <div class="position-relative">
+              <img [src]="property.primaryImageUrl || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'" 
+                   class="card-img-top" 
+                   [alt]="property.title" 
+                   style="height: 250px; object-fit: cover;">
+              <div class="position-absolute top-0 end-0 m-2">
+                <span class="badge bg-success">{{ property.type }}</span>
+              </div>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">{{ property.title }}</h5>
+              <p class="card-text text-muted">
+                <i class="fas fa-map-marker-alt me-1"></i>{{ property.location }}
+              </p>
+              <p class="card-text">{{ property.description | slice:0:100 }}...</p>
+              <div class="mt-auto">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-users me-1 text-muted"></i>
+                    <small class="text-muted">{{ property.maxGuests }} guests</small>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-bed me-1 text-muted"></i>
+                    <small class="text-muted">{{ property.bedrooms }} beds</small>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-bath me-1 text-muted"></i>
+                    <small class="text-muted">{{ property.bathrooms }} baths</small>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="h5 text-primary mb-0">${{ property.pricePerNight }}/night</div>
+                  <button class="btn btn-outline-primary btn-sm" (click)="viewProperty(property.id)">
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Properties Message -->
+      <div class="text-center py-5" *ngIf="!isLoading && properties.length === 0">
+        <i class="fas fa-home fa-3x text-muted mb-3"></i>
+        <h4>No Properties Found</h4>
+        <p class="text-muted">Try adjusting your search filters or check back later for new listings.</p>
+        <button class="btn btn-primary" (click)="clearFilters()">
+          Clear Filters
+        </button>
+      </div>
+
+      <!-- Pagination -->
+      <nav *ngIf="!isLoading && totalPages > 1" class="mt-5">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <a class="page-link" (click)="onPageChange(currentPage - 1)" href="javascript:void(0)">
+              Previous
+            </a>
+          </li>
+          <li class="page-item" 
+              *ngFor="let page of pages" 
+              [class.active]="page === currentPage">
+            <a class="page-link" (click)="onPageChange(page)" href="javascript:void(0)">
+              {{ page }}
+            </a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <a class="page-link" (click)="onPageChange(currentPage + 1)" href="javascript:void(0)">
+              Next
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

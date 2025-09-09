@@ -1,0 +1,141 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow">
+        <div class="card-body p-5">
+          <div class="text-center mb-4">
+            <h2 class="fw-bold">Create Account</h2>
+            <p class="text-muted">Join RentAPlace and start your journey</p>
+          </div>
+
+          <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="name" 
+                       name="name"
+                       [(ngModel)]="registerRequest.name"
+                       #name="ngModel"
+                       required
+                       minlength="2"
+                       [class.is-invalid]="name.invalid && name.touched">
+                <div class="invalid-feedback" *ngIf="name.invalid && name.touched">
+                  <span *ngIf="name.errors?.['required']">Name is required</span>
+                  <span *ngIf="name.errors?.['minlength']">Name must be at least 2 characters</span>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" 
+                       class="form-control" 
+                       id="email" 
+                       name="email"
+                       [(ngModel)]="registerRequest.email"
+                       #email="ngModel"
+                       required
+                       email
+                       [class.is-invalid]="email.invalid && email.touched">
+                <div class="invalid-feedback" *ngIf="email.invalid && email.touched">
+                  <span *ngIf="email.errors?.['required']">Email is required</span>
+                  <span *ngIf="email.errors?.['email']">Please enter a valid email</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" 
+                     class="form-control" 
+                     id="password" 
+                     name="password"
+                     [(ngModel)]="registerRequest.password"
+                     #password="ngModel"
+                     required
+                     minlength="6"
+                     [class.is-invalid]="password.invalid && password.touched">
+              <div class="invalid-feedback" *ngIf="password.invalid && password.touched">
+                <span *ngIf="password.errors?.['required']">Password is required</span>
+                <span *ngIf="password.errors?.['minlength']">Password must be at least 6 characters</span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" 
+                     class="form-control" 
+                     id="confirmPassword" 
+                     name="confirmPassword"
+                     [(ngModel)]="confirmPassword"
+                     #confirmPasswordField="ngModel"
+                     required
+                     [class.is-invalid]="confirmPasswordField.invalid && confirmPasswordField.touched">
+              <div class="invalid-feedback" *ngIf="confirmPasswordField.invalid && confirmPasswordField.touched">
+                <span *ngIf="confirmPasswordField.errors?.['required']">Please confirm your password</span>
+              </div>
+              <div class="invalid-feedback" *ngIf="registerRequest.password && confirmPassword && registerRequest.password !== confirmPassword && confirmPasswordField.touched">
+                Passwords do not match
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="role" class="form-label">I want to</label>
+              <select class="form-select" 
+                      id="role" 
+                      name="role"
+                      [(ngModel)]="registerRequest.role"
+                      #role="ngModel"
+                      required
+                      [class.is-invalid]="role.invalid && role.touched">
+                <option value="">Select your role</option>
+                <option value="Renter">Rent properties</option>
+                <option value="Owner">List my properties for rent</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="role.invalid && role.touched">
+                Please select your role
+              </div>
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" 
+                     class="form-check-input" 
+                     id="agreeTerms"
+                     [(ngModel)]="agreeTerms"
+                     #agreeTermsField="ngModel"
+                     required>
+              <label class="form-check-label" for="agreeTerms">
+                I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> and <a href="#" class="text-decoration-none">Privacy Policy</a>
+              </label>
+              <div class="invalid-feedback" *ngIf="agreeTermsField.invalid && agreeTermsField.touched">
+                You must agree to the terms and conditions
+              </div>
+            </div>
+
+            <div class="d-grid mb-3">
+              <button type="submit" 
+                      class="btn btn-primary btn-lg" 
+                      [disabled]="registerForm.invalid || isLoading || registerRequest.password !== confirmPassword || !agreeTerms">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+              </button>
+            </div>
+
+            <div class="text-center">
+              <p class="mb-0">Already have an account? 
+                <a routerLink="/login" class="text-decoration-none">Sign in here</a>
+              </p>
+            </div>
+          </form>
+
+          <!-- Error Alert -->
+          <div class="alert alert-danger mt-3" *ngIf="errorMessage" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            {{ errorMessage }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

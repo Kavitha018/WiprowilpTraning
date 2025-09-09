@@ -1,0 +1,264 @@
+<!-- Hero Section -->
+<section class="hero-section bg-primary text-white py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <h1 class="display-4 fw-bold mb-4">Find Your Perfect Place to Stay</h1>
+        <p class="lead mb-4">Discover amazing properties for rent worldwide. From cozy apartments to luxury villas, we have something for everyone.</p>
+        <div class="d-flex gap-3">
+          <a routerLink="/properties" class="btn btn-light btn-lg">Browse Properties</a>
+          <a routerLink="/register" class="btn btn-outline-light btn-lg">Get Started</a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+             alt="Beautiful property" class="img-fluid rounded shadow">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Search Section -->
+<section class="search-section py-5 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card shadow">
+          <div class="card-body p-4">
+            <h3 class="text-center mb-4">Search Properties</h3>
+            <form (ngSubmit)="searchProperties()" #searchForm="ngForm">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label for="location" class="form-label">Location</label>
+                  <input type="text" class="form-control" id="location" name="location" 
+                         [(ngModel)]="searchParams.location" placeholder="Where do you want to go?">
+                </div>
+                <div class="col-md-3">
+                  <label for="checkIn" class="form-label">Check-in</label>
+                  <input type="date" class="form-control" id="checkIn" name="checkIn" 
+                         [(ngModel)]="searchParams.checkInDate">
+                </div>
+                <div class="col-md-3">
+                  <label for="checkOut" class="form-label">Check-out</label>
+                  <input type="date" class="form-control" id="checkOut" name="checkOut" 
+                         [(ngModel)]="searchParams.checkOutDate">
+                </div>
+                <div class="col-md-2">
+                  <label for="guests" class="form-label">Guests</label>
+                  <select class="form-select" id="guests" name="guests" [(ngModel)]="searchParams.maxGuests">
+                    <option value="">Any</option>
+                    <option value="1">1 Guest</option>
+                    <option value="2">2 Guests</option>
+                    <option value="3">3 Guests</option>
+                    <option value="4">4 Guests</option>
+                    <option value="5">5+ Guests</option>
+                  </select>
+                </div>
+              </div>
+              <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary btn-lg px-5">
+                  <i class="fas fa-search me-2"></i>Search Properties
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5">
+  <div class="container">
+    <div class="row text-center mb-5">
+      <div class="col-12">
+        <h2 class="display-5 fw-bold">Why Choose RentAPlace?</h2>
+        <p class="lead text-muted">We make finding and renting properties simple and secure</p>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="text-center">
+          <div class="feature-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+               style="width: 80px; height: 80px;">
+            <i class="fas fa-search fa-2x"></i>
+          </div>
+          <h4>Easy Search</h4>
+          <p class="text-muted">Find properties that match your exact needs with our advanced search filters.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="text-center">
+          <div class="feature-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+               style="width: 80px; height: 80px;">
+            <i class="fas fa-shield-alt fa-2x"></i>
+          </div>
+          <h4>Secure Booking</h4>
+          <p class="text-muted">Book with confidence knowing your payments and personal information are secure.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="text-center">
+          <div class="feature-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+               style="width: 80px; height: 80px;">
+            <i class="fas fa-comments fa-2x"></i>
+          </div>
+          <h4>Direct Communication</h4>
+          <p class="text-muted">Chat directly with property owners to ask questions and get instant responses.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Properties Section -->
+<section class="featured-properties-section py-5">
+  <div class="container">
+    <div class="row text-center mb-5">
+      <div class="col-12">
+        <h2 class="display-5 fw-bold">Featured Properties</h2>
+        <p class="lead text-muted">Discover our most popular rental properties</p>
+      </div>
+    </div>
+    
+    <!-- Loading Spinner -->
+    <div class="text-center" *ngIf="isLoading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <!-- Properties Grid -->
+    <div class="row g-4" *ngIf="!isLoading && properties.length > 0">
+      <div class="col-lg-4 col-md-6" *ngFor="let property of properties.slice(0, 6)">
+        <div class="card h-100 border-0 shadow-sm property-card">
+          <div class="position-relative">
+            <img [src]="property.primaryImageUrl || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'" 
+                 class="card-img-top" 
+                 [alt]="property.title" 
+                 style="height: 250px; object-fit: cover;">
+            <div class="position-absolute top-0 end-0 m-2">
+              <span class="badge bg-success">{{ property.type }}</span>
+            </div>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ property.title }}</h5>
+            <p class="card-text text-muted">
+              <i class="fas fa-map-marker-alt me-1"></i>{{ property.location }}
+            </p>
+            <p class="card-text">{{ property.description | slice:0:100 }}...</p>
+            <div class="mt-auto">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-users me-1 text-muted"></i>
+                  <small class="text-muted">{{ property.maxGuests }} guests</small>
+                </div>
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-bed me-1 text-muted"></i>
+                  <small class="text-muted">{{ property.bedrooms }} beds</small>
+                </div>
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-bath me-1 text-muted"></i>
+                  <small class="text-muted">{{ property.bathrooms }} baths</small>
+                </div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="h5 text-primary mb-0">${{ property.pricePerNight }}/night</div>
+                <button class="btn btn-outline-primary btn-sm" (click)="viewProperty(property.id)">
+                  View Details
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Properties Message -->
+    <div class="text-center" *ngIf="!isLoading && properties.length === 0">
+      <div class="py-5">
+        <i class="fas fa-home fa-3x text-muted mb-3"></i>
+        <h4>No Properties Available</h4>
+        <p class="text-muted">Check back later for new property listings.</p>
+      </div>
+    </div>
+
+    <!-- View All Properties Button -->
+    <div class="text-center mt-5" *ngIf="!isLoading && properties.length > 0">
+      <a routerLink="/properties" class="btn btn-primary btn-lg">
+        View All Properties
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Property Types Section -->
+<section class="property-types-section py-5 bg-light">
+  <div class="container">
+    <div class="row text-center mb-5">
+      <div class="col-12">
+        <h2 class="display-5 fw-bold">Property Types</h2>
+        <p class="lead text-muted">Choose from a variety of property types to suit your needs</p>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-3 col-sm-6">
+        <div class="card h-100 border-0 shadow-sm">
+          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
+               class="card-img-top" alt="Apartment" style="height: 200px; object-fit: cover;">
+          <div class="card-body text-center">
+            <h5 class="card-title">Apartments</h5>
+            <p class="card-text text-muted">Modern apartments in prime locations</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="card h-100 border-0 shadow-sm">
+          <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
+               class="card-img-top" alt="House" style="height: 200px; object-fit: cover;">
+          <div class="card-body text-center">
+            <h5 class="card-title">Houses</h5>
+            <p class="card-text text-muted">Spacious houses perfect for families</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="card h-100 border-0 shadow-sm">
+          <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
+               class="card-img-top" alt="Villa" style="height: 200px; object-fit: cover;">
+          <div class="card-body text-center">
+            <h5 class="card-title">Villas</h5>
+            <p class="card-text text-muted">Luxury villas with premium amenities</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="card h-100 border-0 shadow-sm">
+          <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
+               class="card-img-top" alt="Studio" style="height: 200px; object-fit: cover;">
+          <div class="card-body text-center">
+            <h5 class="card-title">Studios</h5>
+            <p class="card-text text-muted">Compact studios for solo travelers</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5 bg-primary text-white">
+  <div class="container text-center">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <h2 class="display-5 fw-bold mb-4">Ready to Find Your Perfect Place?</h2>
+        <p class="lead mb-4">Join thousands of satisfied customers who found their ideal rental property with us.</p>
+        <div class="d-flex gap-3 justify-content-center">
+          <a routerLink="/register" class="btn btn-light btn-lg">Get Started Today</a>
+          <a routerLink="/properties" class="btn btn-outline-light btn-lg">Browse Properties</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

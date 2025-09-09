@@ -1,0 +1,78 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow">
+        <div class="card-body p-5">
+          <div class="text-center mb-4">
+            <h2 class="fw-bold">Welcome Back</h2>
+            <p class="text-muted">Sign in to your account</p>
+          </div>
+
+          <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              <input type="email" 
+                     class="form-control" 
+                     id="email" 
+                     name="email"
+                     [(ngModel)]="loginRequest.email"
+                     #email="ngModel"
+                     required
+                     email
+                     [class.is-invalid]="email.invalid && email.touched">
+              <div class="invalid-feedback" *ngIf="email.invalid && email.touched">
+                <span *ngIf="email.errors?.['required']">Email is required</span>
+                <span *ngIf="email.errors?.['email']">Please enter a valid email</span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" 
+                     class="form-control" 
+                     id="password" 
+                     name="password"
+                     [(ngModel)]="loginRequest.password"
+                     #password="ngModel"
+                     required
+                     minlength="6"
+                     [class.is-invalid]="password.invalid && password.touched">
+              <div class="invalid-feedback" *ngIf="password.invalid && password.touched">
+                <span *ngIf="password.errors?.['required']">Password is required</span>
+                <span *ngIf="password.errors?.['minlength']">Password must be at least 6 characters</span>
+              </div>
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="rememberMe">
+              <label class="form-check-label" for="rememberMe">
+                Remember me
+              </label>
+            </div>
+
+            <div class="d-grid mb-3">
+              <button type="submit" 
+                      class="btn btn-primary btn-lg" 
+                      [disabled]="loginForm.invalid || isLoading">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                {{ isLoading ? 'Signing in...' : 'Sign In' }}
+              </button>
+            </div>
+
+            <div class="text-center">
+              <p class="mb-0">Don't have an account? 
+                <a routerLink="/register" class="text-decoration-none">Sign up here</a>
+              </p>
+            </div>
+          </form>
+
+          <!-- Error Alert -->
+          <div class="alert alert-danger mt-3" *ngIf="errorMessage" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            {{ errorMessage }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
