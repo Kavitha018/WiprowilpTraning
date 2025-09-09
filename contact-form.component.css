@@ -1,0 +1,13 @@
+.error-message {
+  color: red; /* Set the text color to red */
+  font-size: 14px; /* Optional: Adjust the font size */
+  margin-top: 5px; /* Optional: Add some space between input and error message */
+}
+.invalid-feedback
+{
+  display: block;
+  width: 100%;
+  margin-top: .25rem;
+  font-size: 80%;
+  color: #dc3545;
+}
